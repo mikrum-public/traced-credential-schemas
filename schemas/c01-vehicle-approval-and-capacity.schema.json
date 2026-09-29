@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:c01-vehicle-approval-and-capacity:0.1.0",
+  "title": "C01 Vehicle Type Approval (Livestock) incl. C05 Loading Density & Capacity",
+  "description": "Certificate of approval of a means of transport by road for long journeys (Art. 18), consolidated with the vehicle capacity data needed to check space allowances (Annex I, Chapter VII) at loading.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "C01",
+    "kind": "credential",
+    "category": "C — Road vehicle",
+    "consolidates": [
+      "C01 Vehicle Type Approval (Livestock)",
+      "C05 Loading Density & Capacity"
+    ],
+    "issuer": "Competent authority or body designated by the Member State (Art. 18(1)).",
+    "holder": "Transporter (legal-entity wallet); bound to the vehicle by VIN.",
+    "verifiers": [
+      "Competent authority of the place of departure (Art. 14(1)(a)(i))",
+      "Competent authority of the country of destination (Art. 6(8))",
+      "Official veterinarians at control posts and exit points (Art. 21(1)(d))"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 6(8), 7(1), 18",
+      "Reg (EC) No 1/2005 Annex I, Chapters II, VI and VII",
+      "Reg (EC) No 1/2005 Annex III, Chapter IV (specimen certificate)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: model certificate of approval of means of transport by road (owner, vehicle identification, max decks, max surface, species/categories).",
+    "validity": "≤ 5 years; void on welfare-relevant modification.",
+    "revocation": "Suspension or withdrawal (Art. 26(4)(c)).",
+    "integrity": "Issuer electronic seal.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:c01-vehicle-approval-and-capacity:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Whether the capacity profile is issued by the authority or computed by the operator from floor area (then C05 claims move to the I01 anchor)."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "approvalCertificateNumber": {
+      "type": "string",
+      "description": "Number unique in the issuing Member State (Art. 18(2)).",
+      "x-disclosable": false
+    },
+    "vehicle": {
+      "type": "object",
+      "description": "Vehicle identification. Claim names kept aligned with vehicle-registration attestations (mVRC) so the two can be linked by VIN.",
+      "x-disclosable": false,
+      "properties": {
+        "vin": {
+          "type": "string",
+          "minLength": 11,
+          "maxLength": 17,
+          "description": "Vehicle identification number."
+        },
+        "registrationPlate": {
+          "type": "string"
+        },
+        "registrationCountry": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/countryCode"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "vehicleType": {
+          "type": "string",
+          "enum": [
+            "rigid-truck",
+            "trailer",
+            "semi-trailer",
+            "other"
+          ]
+        }
+      },
+      "required": [
+        "vin",
+        "registrationPlate",
+        "registrationCountry"
+      ],
+      "additionalProperties": false
+    },
+    "owner": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/legalEntity",
+      "description": "Owner identification as in the specimen certificate.",
+      "x-disclosable": false
+    },
+    "speciesCategories": {
+      "type": "array",
+      "description": "Species/categories the vehicle is approved to transport.",
+      "x-disclosable": false,
+      "items": {
+        "$ref": "urn:traced:schema:common:0.1.0#/$defs/species"
+      },
+      "minItems": 1
+    },
+    "maxDecks": {
+      "type": "integer",
+      "description": "Maximum number of decks.",
+      "x-disclosable": false,
+      "minimum": 1
+    },
+    "usableFloorAreaPerDeckM2": {
+      "type": "array",
+      "description": "Usable floor area per deck, in m² (C05). Input to the space-allowance check.",
+      "x-disclosable": false,
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      },
+      "minItems": 1
+    },
+    "equipment": {
+      "type": "object",
+      "description": "Long-journey equipment found compliant at inspection (Annex I, Chapter VI).",
+      "x-disclosable": true,
+      "properties": {
+        "navigationSystem": {
+          "type": "boolean",
+          "description": "Chapter VI, point 4"
+        },
+        "temperatureMonitoringAndRecording": {
+          "type": "boolean",
+          "description": "Chapter VI, point 3.3"
+        },
+        "temperatureWarningSystem": {
+          "type": "boolean",
+          "description": "Chapter VI, point 3.4"
+        },
+        "ventilationIndependentHours": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Chapter VI, point 3.2 (≥ 4 h)"
+        },
+        "waterTankCapacityLitres": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Chapter VI, point 2.3 (≥ 1.5 % of max payload)"
+        },
+        "adjustablePartitions": {
+          "type": "boolean",
+          "description": "Chapter VI, points 1.7–1.8"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capacityProfile": {
+      "type": "array",
+      "description": "C05: informative maximum loading per species/category and weight class, derived from floor area and Annex I, Chapter VII. The binding check is the rules-as-code determination at loading, per journey.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "species": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/species"
+          },
+          "category": {
+            "type": "string"
+          },
+          "approxWeightKg": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "minAreaPerAnimalM2": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "maxAnimalsTotal": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "species",
+          "minAreaPerAnimalM2"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "inspection": {
+      "type": "object",
+      "description": "Inspection on which the approval rests (Art. 18(1)(b)).",
+      "x-disclosable": true,
+      "properties": {
+        "date": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/date"
+        },
+        "inspectingBody": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "date",
+        "inspectingBody"
+      ],
+      "additionalProperties": false
+    },
+    "issuingAuthority": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority",
+      "description": "Competent authority or designated body that granted the approval.",
+      "x-disclosable": false
+    },
+    "dateOfIssue": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "Date of issue.",
+      "x-disclosable": false
+    },
+    "validUntil": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "Not more than five years; invalid as soon as the vehicle is modified or refitted in a way that affects animal welfare (Art. 18(2)).",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "approvalCertificateNumber",
+    "vehicle",
+    "owner",
+    "speciesCategories",
+    "maxDecks",
+    "usableFloorAreaPerDeckM2",
+    "issuingAuthority",
+    "dateOfIssue",
+    "validUntil"
+  ],
+  "additionalProperties": false
+}

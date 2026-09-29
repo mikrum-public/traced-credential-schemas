@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:h03-official-veterinarian-mandate:0.1.0",
+  "title": "H03 Official Veterinarian Mandate",
+  "description": "Attests that a veterinarian is appointed by the competent authority to act for it, and for which official activities — so that vet-signed credentials can be verified across Member States, offline.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "H03",
+    "kind": "credential",
+    "category": "H — Veterinary & health",
+    "consolidates": [
+      "H03 Official Veterinarian Mandate"
+    ],
+    "issuer": "Competent authority that appoints the official veterinarian.",
+    "holder": "The official veterinarian (natural person); holder model fixed in T2.4.",
+    "verifiers": [
+      "Any relying party checking a vet-signed credential (H01, H02, I02 check events, I09)",
+      "Authorities of other Member States",
+      "Transporters and keepers"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 2(p)",
+      "Reg (EU) 2017/625 (Official Controls Regulation) Art. 3(26), 3(32)"
+    ],
+    "forwardCompatibility": "Unaffected; definition sits in the Official Controls Regulation.",
+    "validity": "Duration of the appointment.",
+    "revocation": "On end or suspension of the appointment → status list.",
+    "integrity": "Issuer electronic seal.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:h03-official-veterinarian-mandate:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points",
+      "UC-4 destination & anomaly"
+    ],
+    "openQuestions": [
+      "Relationship to certifying-officer registration in TRACES NT (avoid duplicating what TRACES already asserts)."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "officialVeterinarian": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/naturalPerson",
+      "description": "The appointed veterinarian.",
+      "x-disclosable": true
+    },
+    "professionalId": {
+      "type": "string",
+      "description": "Registration or staff identifier of the veterinarian.",
+      "x-disclosable": false
+    },
+    "appointingAuthority": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority",
+      "description": "Competent authority that appointed the veterinarian.",
+      "x-disclosable": false
+    },
+    "mandateScope": {
+      "type": "array",
+      "description": "Official activities covered.",
+      "x-disclosable": false,
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "animal-health-certification",
+          "fitness-for-transport-check",
+          "control-post-supervision",
+          "exit-point-check",
+          "journey-log-check",
+          "slaughterhouse-official-control"
+        ]
+      }
+    },
+    "territorialScope": {
+      "type": "string",
+      "description": "Region or Member State where the mandate applies.",
+      "x-disclosable": false
+    },
+    "validFrom": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "Start of the mandate.",
+      "x-disclosable": false
+    },
+    "validUntil": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "End of the mandate.",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "officialVeterinarian",
+    "professionalId",
+    "appointingAuthority",
+    "mandateScope",
+    "territorialScope",
+    "validFrom"
+  ],
+  "additionalProperties": false
+}

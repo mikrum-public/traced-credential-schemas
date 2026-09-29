@@ -1,0 +1,19 @@
+{
+  "certificateNumber": "HU-COC-EXAMPLE-0042",
+  "person": {
+    "familyName": "Example",
+    "givenName": "Driver",
+    "birthDate": "1985-04-12"
+  },
+  "speciesScope": [
+    "bovine",
+    "ovine",
+    "caprine",
+    "porcine"
+  ],
+  "issuingAuthorityOrBody": {
+    "name": "Example Designated Training Body",
+    "countryCode": "HU"
+  },
+  "dateOfIssue": "2024-03-01"
+}

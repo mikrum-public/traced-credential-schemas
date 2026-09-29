@@ -1,0 +1,49 @@
+{
+  "approvalCertificateNumber": "HU-VA-EXAMPLE-0007",
+  "vehicle": {
+    "vin": "WDB0000000EXAMPLE",
+    "registrationPlate": "EXA-001",
+    "registrationCountry": "HU",
+    "vehicleType": "semi-trailer"
+  },
+  "owner": {
+    "name": "Example Livestock Transport Ltd",
+    "countryCode": "HU"
+  },
+  "speciesCategories": [
+    "bovine",
+    "ovine"
+  ],
+  "maxDecks": 2,
+  "usableFloorAreaPerDeckM2": [
+    32.5,
+    32.5
+  ],
+  "equipment": {
+    "navigationSystem": true,
+    "temperatureMonitoringAndRecording": true,
+    "temperatureWarningSystem": true,
+    "ventilationIndependentHours": 4,
+    "waterTankCapacityLitres": 600,
+    "adjustablePartitions": true
+  },
+  "capacityProfile": [
+    {
+      "species": "bovine",
+      "category": "heavy cattle",
+      "approxWeightKg": 550,
+      "minAreaPerAnimalM2": 1.3,
+      "maxAnimalsTotal": 50
+    }
+  ],
+  "inspection": {
+    "date": "2025-11-20",
+    "inspectingBody": "Example Inspection Body"
+  },
+  "issuingAuthority": {
+    "name": "Example Competent Authority",
+    "countryCode": "HU"
+  },
+  "dateOfIssue": "2025-12-01",
+  "validUntil": "2030-11-30"
+}

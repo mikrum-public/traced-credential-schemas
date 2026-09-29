@@ -1,0 +1,28 @@
+{
+  "journeyId": "JL-EXAMPLE-0001",
+  "sequenceNumber": 3,
+  "previousEventDigest": {
+    "alg": "sha-256",
+    "value": "cHJldmlvdXMtZXZlbnQ"
+  },
+  "eventType": "control-post-departure",
+  "occurredAt": "2026-10-05T20:40:00Z",
+  "location": {
+    "countryCode": "SI",
+    "placeName": "Example Control Post"
+  },
+  "welfare": {
+    "watered": true,
+    "fed": true,
+    "restMinutes": 70,
+    "compartmentTempMinC": 14.5,
+    "compartmentTempMaxC": 22.0,
+    "animalsUnfit": 0,
+    "animalsDead": 0
+  },
+  "fitToContinue": true,
+  "signer": {
+    "role": "official-veterinarian",
+    "reference": "OV-EXAMPLE-SI-3"
+  }
+}

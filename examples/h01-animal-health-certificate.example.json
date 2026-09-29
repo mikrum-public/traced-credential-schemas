@@ -1,0 +1,25 @@
+{
+  "certificateReference": "INTRA.HU.2026.EXAMPLE001",
+  "certificateModel": "BOV-INTRA-X (example)",
+  "consignmentId": "CONS-EXAMPLE-0001",
+  "species": "bovine",
+  "headcount": 3,
+  "attestations": [
+    {
+      "requirement": "example requirement",
+      "outcome": "met"
+    }
+  ],
+  "certifyingOfficer": {
+    "professionalId": "OV-EXAMPLE-117"
+  },
+  "placeOfIssue": {
+    "name": "Example district office",
+    "countryCode": "HU"
+  },
+  "signedAt": "2026-10-04T14:10:00Z",
+  "originalSignatureDigest": {
+    "alg": "sha-256",
+    "value": "ZXhhbXBsZS1kaWdlc3Qtb25seQ"
+  }
+}

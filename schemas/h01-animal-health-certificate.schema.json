@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:h01-animal-health-certificate:0.1.0",
+  "title": "H01 Animal Health Certificate (Pre-Movement)",
+  "description": "Wallet representation of the official animal health certificate for movements between Member States. It references and preserves the TRACES NT certificate — it does not replace it.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "H01",
+    "kind": "credential",
+    "category": "H — Veterinary & health",
+    "consolidates": [
+      "H01 Animal Health Certificate (Pre-Movement)"
+    ],
+    "issuer": "Official veterinarian (certifying officer) of the competent authority at the place of departure.",
+    "holder": "Operator dispatching the consignment; carried by the transporter (legal-entity wallet).",
+    "verifiers": [
+      "Competent authority of the place of destination",
+      "Official veterinarians at control posts",
+      "TRACES NT cross-check by any authority"
+    ],
+    "legalBasis": [
+      "Reg (EU) 2016/429 (Animal Health Law) Art. 143, 145, 149, 150",
+      "Delegated Reg (EU) 2020/688",
+      "Implementing Reg (EU) 2021/403 (model certificates)",
+      "Reg (EU) 2017/625 (Official Controls Regulation) Art. 3(26)–(27)"
+    ],
+    "forwardCompatibility": "Unaffected by COM(2023) 770.",
+    "validity": "As set for the certificate model; single movement.",
+    "revocation": "Replacement or cancellation in TRACES NT → status list.",
+    "integrity": "Tier 3 — pre-authenticated: TRACES NT signature validated and preserved; wallet copy sealed by the issuer.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:h01-animal-health-certificate:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Who seals the wallet copy: the certifying officer via the authority, or the verify-and-issue channel (T4.4) on reading the TRACES NT record."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "certificateReference": {
+      "type": "string",
+      "description": "TRACES NT certificate reference.",
+      "x-disclosable": false
+    },
+    "certificateModel": {
+      "type": "string",
+      "description": "Model certificate applied (Implementing Reg (EU) 2021/403).",
+      "x-disclosable": false
+    },
+    "consignmentId": {
+      "type": "string",
+      "description": "Consignment identifier (G01).",
+      "x-disclosable": false
+    },
+    "species": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/species",
+      "description": "Species.",
+      "x-disclosable": false
+    },
+    "headcount": {
+      "type": "integer",
+      "description": "Number of animals certified.",
+      "x-disclosable": false,
+      "minimum": 1
+    },
+    "attestations": {
+      "type": "array",
+      "description": "Animal health attestations certified, as requirement–outcome pairs.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "requirement": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "met",
+              "not-applicable"
+            ]
+          }
+        },
+        "required": [
+          "requirement",
+          "outcome"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "testsPerformed": {
+      "type": "array",
+      "description": "Laboratory tests referred to in the certificate.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "test": {
+            "type": "string"
+          },
+          "date": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/date"
+          },
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "test",
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "certifyingOfficer": {
+      "type": "object",
+      "description": "Official veterinarian who signed; resolvable to an H03 mandate.",
+      "x-disclosable": true,
+      "properties": {
+        "professionalId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "professionalId"
+      ],
+      "additionalProperties": false
+    },
+    "placeOfIssue": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Place of issue.",
+      "x-disclosable": false
+    },
+    "signedAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time of signature in TRACES NT.",
+      "x-disclosable": false
+    },
+    "originalSignatureDigest": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest",
+      "description": "Digest of the signed TRACES NT certificate (Tier 3: original signature validated and preserved).",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "certificateReference",
+    "consignmentId",
+    "species",
+    "headcount",
+    "certifyingOfficer",
+    "placeOfIssue",
+    "signedAt",
+    "originalSignatureDigest"
+  ],
+  "additionalProperties": false
+}

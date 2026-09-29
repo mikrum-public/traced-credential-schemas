@@ -1,0 +1,35 @@
+{
+  "journeyId": "JL-EXAMPLE-0001",
+  "tracesReferences": {
+    "journeyLogReference": "TRACES-JL-EXAMPLE-0001",
+    "healthCertificateReferences": [
+      "INTRA.HU.2026.EXAMPLE001"
+    ]
+  },
+  "notifiedAuthorities": [
+    {
+      "authority": {
+        "name": "Example Destination Authority",
+        "countryCode": "IT"
+      },
+      "role": "destination"
+    }
+  ],
+  "borderCrossings": [
+    {
+      "fromCountry": "HU",
+      "toCountry": "SI",
+      "planned": "2026-10-05T12:00:00Z"
+    },
+    {
+      "fromCountry": "SI",
+      "toCountry": "IT",
+      "planned": "2026-10-05T23:00:00Z"
+    }
+  ],
+  "registeredAt": "2026-10-03T10:00:00Z",
+  "recordedBy": {
+    "name": "Example Competent Authority",
+    "countryCode": "HU"
+  }
+}

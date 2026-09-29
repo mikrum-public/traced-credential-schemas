@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:j01-holding-registration:0.1.0",
+  "title": "J01 Farm/Holding Registration",
+  "description": "Registration (and, where required, approval) of the establishment of origin, with the status information needed for the pre-departure check.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "J01",
+    "kind": "credential",
+    "category": "J — Facility",
+    "consolidates": [
+      "J01 Farm/Holding Registration"
+    ],
+    "issuer": "Competent authority keeping the register of establishments.",
+    "holder": "Operator of the establishment (keeper).",
+    "verifiers": [
+      "Competent authority of the place of departure",
+      "Organiser and transporter (origin check)",
+      "Competent authority of destination"
+    ],
+    "legalBasis": [
+      "Reg (EU) 2016/429 (Animal Health Law) Art. 84, 93, 94, 101",
+      "Reg (EC) No 1/2005 Art. 4(1)(a)"
+    ],
+    "forwardCompatibility": "Unaffected by COM(2023) 770.",
+    "validity": "Short: status statements carry their own validity; re-issued on change.",
+    "revocation": "On deregistration, suspension or new restriction → status list.",
+    "integrity": "Issuer electronic seal.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:j01-holding-registration:0.1",
+    "useCases": [
+      "UC-1 pre-departure"
+    ],
+    "openQuestions": [
+      "Keepers who are natural persons: EUDI Wallet vs. an authority-held record presented by reference."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "registrationNumber": {
+      "type": "string",
+      "description": "Registration number of the establishment.",
+      "x-disclosable": false
+    },
+    "approvalNumber": {
+      "type": "string",
+      "description": "Approval number, where the establishment is approved (e.g. assembly centre).",
+      "x-disclosable": false
+    },
+    "establishmentType": {
+      "type": "string",
+      "description": "Type of establishment.",
+      "x-disclosable": false,
+      "enum": [
+        "holding",
+        "assembly-centre",
+        "control-post",
+        "slaughterhouse",
+        "other"
+      ]
+    },
+    "operator": {
+      "type": "object",
+      "description": "Operator of the establishment; a natural person's name is personal data.",
+      "x-disclosable": true,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "location": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Address of the establishment.",
+      "x-disclosable": false
+    },
+    "speciesKept": {
+      "type": "array",
+      "description": "Species kept.",
+      "x-disclosable": false,
+      "items": {
+        "$ref": "urn:traced:schema:common:0.1.0#/$defs/species"
+      },
+      "minItems": 1
+    },
+    "movementRestriction": {
+      "type": "boolean",
+      "description": "Whether a movement restriction applies at the time of issue.",
+      "x-disclosable": false
+    },
+    "healthStatus": {
+      "type": "array",
+      "description": "Disease-status statements relevant to movement.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "disease": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "validUntil": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/date"
+          }
+        },
+        "required": [
+          "disease",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "competentAuthority": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority",
+      "description": "Authority keeping the register.",
+      "x-disclosable": false
+    },
+    "statusAsOf": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time the status was taken from the register.",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "registrationNumber",
+    "establishmentType",
+    "location",
+    "speciesKept",
+    "movementRestriction",
+    "competentAuthority",
+    "statusAsOf"
+  ],
+  "additionalProperties": false
+}

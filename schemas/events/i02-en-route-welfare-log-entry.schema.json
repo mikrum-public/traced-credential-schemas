@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:i02-en-route-welfare-log-entry:0.1.0",
+  "title": "I02 En-Route Welfare Log Entry (bound event)",
+  "description": "A signed journey event bound to the I01 anchor and hash-linked to the previous event. Sensor streams are not credentials: temperature is summarised here, the raw Tier-2 data stay in tamper-protected storage and are referenced by digest.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "I02",
+    "kind": "bound-event",
+    "parent": "I01",
+    "category": "I — Journey & welfare",
+    "consolidates": [],
+    "issuer": "Transporter (driver device, on behalf of the transporter — Annex II, Section 4); official-check events are signed by the checking official veterinarian or authority.",
+    "holder": "Transporter; synchronised progressively to the platform.",
+    "verifiers": [
+      "Competent authority en route (Art. 15(1))",
+      "Control posts",
+      "Competent authority of destination and departure"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Annex II, Section 4",
+      "Reg (EC) No 1/2005 Annex I, Chapter V (intervals, journey times, rest)",
+      "Reg (EC) No 1/2005 Art. 6(9) and Annex I, Chapter VI, point 4 (navigation system)",
+      "Reg (EC) No 1255/97 Art. 6 (fitness to continue confirmed on the journey log at control posts)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: journey records in TRACES; mapping in T2.1.",
+    "validity": "Permanent record (\"valid at the time\").",
+    "revocation": "Not revoked; corrections are new events.",
+    "integrity": "Signed event; hash-linked; Tier-2 sensor data by digest.",
+    "format": "SD-JWT VC (event type)",
+    "vct": "urn:traced:event:i02-en-route-welfare-log-entry:0.1",
+    "useCases": [
+      "UC-2 in-transit welfare",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Granularity: one event per stop vs. periodic welfare summaries."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "journeyId": {
+      "type": "string",
+      "description": "I01 anchor.",
+      "x-disclosable": false
+    },
+    "sequenceNumber": {
+      "type": "integer",
+      "description": "Position in the event trail.",
+      "x-disclosable": false,
+      "minimum": 1
+    },
+    "previousEventDigest": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest",
+      "description": "Digest of the previous event (or of the anchor for the first event).",
+      "x-disclosable": false
+    },
+    "eventType": {
+      "type": "string",
+      "description": "Event type.",
+      "x-disclosable": false,
+      "enum": [
+        "departure",
+        "rest-start",
+        "rest-end",
+        "watering-feeding",
+        "transfer",
+        "control-post-arrival",
+        "control-post-departure",
+        "official-check",
+        "anomaly"
+      ]
+    },
+    "occurredAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Event time.",
+      "x-disclosable": false
+    },
+    "location": {
+      "type": "object",
+      "description": "Where the event occurred. Driver geolocation is personal data: country is always disclosed, coordinates only when the check requires them.",
+      "x-disclosable": true,
+      "properties": {
+        "countryCode": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/countryCode"
+        },
+        "placeName": {
+          "type": "string"
+        },
+        "geo": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/geoPoint"
+        }
+      },
+      "required": [
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "welfare": {
+      "type": "object",
+      "description": "Welfare observations for the event.",
+      "x-disclosable": true,
+      "properties": {
+        "watered": {
+          "type": "boolean"
+        },
+        "fed": {
+          "type": "boolean"
+        },
+        "restMinutes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "compartmentTempMinC": {
+          "type": "number"
+        },
+        "compartmentTempMaxC": {
+          "type": "number"
+        },
+        "animalsUnfit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "animalsDead": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "fitToContinue": {
+      "type": "boolean",
+      "description": "Official-check and control-post events: animals confirmed fit to continue.",
+      "x-disclosable": false
+    },
+    "sensorEvidenceDigest": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest",
+      "description": "Digest of the Tier-2 sensor/telematics records covering the event.",
+      "x-disclosable": true
+    },
+    "signer": {
+      "type": "object",
+      "description": "Who signed this event.",
+      "x-disclosable": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "transporter",
+            "official-veterinarian",
+            "competent-authority"
+          ]
+        },
+        "reference": {
+          "type": "string",
+          "description": "A01 number, H03 professionalId or authority name."
+        }
+      },
+      "required": [
+        "role",
+        "reference"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "journeyId",
+    "sequenceNumber",
+    "previousEventDigest",
+    "eventType",
+    "occurredAt",
+    "location",
+    "signer"
+  ],
+  "additionalProperties": false
+}

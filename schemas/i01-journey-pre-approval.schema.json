@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:i01-journey-pre-approval:0.1.0",
+  "title": "I01 Journey Pre-Approval (anchor)",
+  "description": "The journey anchor: the approved journey plan (journey log, Section 1 — Planning). Every later signed event — I02 en-route entries, K05 border registration, I07 completion, I09 reception — binds to its journeyId.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "I01",
+    "kind": "credential",
+    "category": "I — Journey & welfare",
+    "consolidates": [
+      "I01 Journey Pre-Approval (anchor)",
+      "I02 En-Route Welfare Log Entry",
+      "I07 Post-Arrival Journey Completion Report"
+    ],
+    "boundEvents": [
+      "i02-en-route-welfare-log-entry",
+      "i07-post-arrival-journey-completion"
+    ],
+    "issuer": "Competent authority of the place of departure (Art. 14(1)); bound events are signed by their own signers (see events/).",
+    "holder": "Organiser / transporter (legal-entity wallet).",
+    "verifiers": [
+      "Every competent authority and official veterinarian on the route",
+      "Control posts",
+      "Keeper and competent authority at destination"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 4, 5(4), 14(1)",
+      "Reg (EC) No 1/2005 Annex II, points 1–3 and Section 1 (Planning)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: Art. 15 (journey log submitted in TRACES and approved by the competent authority of departure before the journey starts).",
+    "validity": "Until journey completion (I07).",
+    "revocation": "Cancellation before departure → status list.",
+    "integrity": "Issuer electronic seal; the anchor of the hash-linked event trail.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:i01-journey-pre-approval:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-2 in-transit welfare",
+      "UC-3 official verification at control points",
+      "UC-4 destination & anomaly"
+    ],
+    "openQuestions": [
+      "Short journeys: whether the pilot issues an anchor for journeys without an approval step today."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "journeyId": {
+      "type": "string",
+      "description": "Distinguishing number of the journey log (Annex II, point 3(a)).",
+      "x-disclosable": false
+    },
+    "journeyType": {
+      "type": "string",
+      "description": "long-journey (> 8 h, Art. 2(m)) or short-journey.",
+      "x-disclosable": false,
+      "enum": [
+        "long-journey",
+        "short-journey"
+      ]
+    },
+    "organiser": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/legalEntity",
+      "description": "Organiser (Art. 2(q)).",
+      "x-disclosable": false
+    },
+    "transporters": {
+      "type": "array",
+      "description": "Transporters in the journey log, by authorisation number (A01).",
+      "x-disclosable": false,
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "authorisationNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "authorisationNumber"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "responsiblePerson": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/naturalPerson",
+      "description": "Natural person responsible for information on planning, execution and completion (Art. 5(2)–(3)).",
+      "x-disclosable": true
+    },
+    "animals": {
+      "type": "object",
+      "description": "Animals planned.",
+      "x-disclosable": false,
+      "properties": {
+        "species": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/species"
+        },
+        "headcount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "estimatedTotalWeightKg": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "species",
+        "headcount"
+      ],
+      "additionalProperties": false
+    },
+    "placeOfDeparture": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Place of departure (Art. 2(r)).",
+      "x-disclosable": false
+    },
+    "plannedDeparture": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Date and time of departure (Art. 4(1)(c)).",
+      "x-disclosable": false
+    },
+    "placeOfDestination": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Intended place of destination (Art. 2(s)).",
+      "x-disclosable": false
+    },
+    "expectedDurationHours": {
+      "type": "number",
+      "description": "Expected duration of the journey (Art. 4(1)(e)).",
+      "x-disclosable": false,
+      "exclusiveMinimum": 0
+    },
+    "plannedRestAndTransferPoints": {
+      "type": "array",
+      "description": "Planned places of rest or transfer, incl. control posts.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "place": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/place"
+          },
+          "plannedArrival": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime"
+          },
+          "plannedDurationHours": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "place",
+          "plannedArrival"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "vehicleApprovalNumbers": {
+      "type": "array",
+      "description": "C01 approval numbers of the vehicles used.",
+      "x-disclosable": false,
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "driverCertificateNumbers": {
+      "type": "array",
+      "description": "B01 certificate numbers of drivers and attendants.",
+      "x-disclosable": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "healthCertificateReferences": {
+      "type": "array",
+      "description": "H01 references (may be added after approval; Annex II, point 3(b)).",
+      "x-disclosable": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "approval": {
+      "type": "object",
+      "description": "Approval by the competent authority of the place of departure after its checks (Art. 14(1)(a)–(c)).",
+      "x-disclosable": false,
+      "properties": {
+        "approvingAuthority": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority"
+        },
+        "approvedAt": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "journey-log-stamp-equivalent",
+            "traces-nt-approval"
+          ]
+        }
+      },
+      "required": [
+        "approvingAuthority",
+        "approvedAt",
+        "method"
+      ],
+      "additionalProperties": false
+    },
+    "pinnedVersions": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/versionSet",
+      "description": "Semantic-model, credential-schema and rule-set versions pinned at journey start.",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "journeyId",
+    "journeyType",
+    "organiser",
+    "transporters",
+    "animals",
+    "placeOfDeparture",
+    "plannedDeparture",
+    "placeOfDestination",
+    "expectedDurationHours",
+    "vehicleApprovalNumbers",
+    "approval",
+    "pinnedVersions"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,21 @@
+{
+  "journeyId": "JL-EXAMPLE-0001",
+  "placeOfDestination": {
+    "name": "Example Destination Holding",
+    "establishmentId": "IT-EST-EXAMPLE-09",
+    "countryCode": "IT"
+  },
+  "destinationType": "holding",
+  "arrivalAt": "2026-10-06T02:10:00Z",
+  "unloadingCompletedAt": "2026-10-06T02:40:00Z",
+  "animalsReceived": 3,
+  "conditionOnArrival": {
+    "fit": 3,
+    "unfit": 0,
+    "dead": 0
+  },
+  "receivedBy": {
+    "establishmentOperator": "Example Destination Holding",
+    "signatoryRole": "keeper"
+  }
+}

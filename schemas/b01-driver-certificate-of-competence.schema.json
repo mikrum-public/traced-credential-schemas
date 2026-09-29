@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:b01-driver-certificate-of-competence:0.1.0",
+  "title": "B01 Driver Certificate of Competence (Animal Welfare)",
+  "description": "Certificate of competence for drivers and attendants of road vehicles transporting domestic Equidae, bovine, ovine, caprine, porcine animals or poultry (Art. 6(5), 17(2)).",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "B01",
+    "kind": "credential",
+    "category": "B — Driver & personnel",
+    "consolidates": [
+      "B01 Driver Certificate of Competence (Animal Welfare)"
+    ],
+    "issuer": "Competent authority or designated body of the Member State (Art. 17(2)); training and independent examination per Annex IV.",
+    "holder": "In the pilot: held in the transporter's legal-entity wallet with the driver as subject, linked to the transporter by the mandate credential defined in T2.4 / D1.1.",
+    "verifiers": [
+      "Competent authority of the place of departure (Art. 14(1)(a)(i))",
+      "Official veterinarians at control posts and exit points (Art. 21(1)(b))",
+      "Competent authority granting a Type 2 authorisation (Art. 11(1)(b)(i))"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 6(5), 17(2)",
+      "Reg (EC) No 1/2005 Annex IV (training)",
+      "Reg (EC) No 1/2005 Annex III, Chapter III (specimen certificate)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: certificate of competence provisions; mapping in T2.1.",
+    "validity": "As set nationally.",
+    "revocation": "Suspension or withdrawal (Art. 26(5)).",
+    "integrity": "Issuer electronic seal.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:b01-driver-certificate-of-competence:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Holder model for a natural-person credential used in a legal-entity context (T2.4): transporter wallet + mandate credential vs. the driver's own EUDI Wallet."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "certificateNumber": {
+      "type": "string",
+      "description": "Certificate number.",
+      "x-disclosable": false
+    },
+    "person": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/naturalPerson",
+      "description": "The driver or attendant. Personal data: disclosed only for identity matching at a check.",
+      "x-disclosable": true
+    },
+    "speciesScope": {
+      "type": "array",
+      "description": "Species or group of species the certificate covers (Art. 17(2) allows limitation).",
+      "x-disclosable": false,
+      "items": {
+        "$ref": "urn:traced:schema:common:0.1.0#/$defs/species"
+      },
+      "minItems": 1
+    },
+    "issuingAuthorityOrBody": {
+      "type": "object",
+      "description": "Competent authority or body designated by the Member State (Art. 17(2)).",
+      "x-disclosable": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "countryCode": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/countryCode"
+        }
+      },
+      "required": [
+        "name",
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "dateOfIssue": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "Date of issue.",
+      "x-disclosable": false
+    },
+    "validUntil": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "End of validity where national rules set one (Reg (EC) No 1/2005 sets none).",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "certificateNumber",
+    "person",
+    "speciesScope",
+    "issuingAuthorityOrBody",
+    "dateOfIssue"
+  ],
+  "additionalProperties": false
+}

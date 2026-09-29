@@ -1,0 +1,25 @@
+{
+  "journeyId": "JL-EXAMPLE-0001",
+  "evaluatedAt": "2026-10-05T20:45:00Z",
+  "coversEventsUpTo": 3,
+  "result": "compliant",
+  "rulesApplied": [
+    "Annex I, Chapter V, 1.4(d)"
+  ],
+  "segments": [
+    {
+      "from": "2026-10-05T06:30:00Z",
+      "to": "2026-10-05T19:30:00Z",
+      "travelMinutes": 780,
+      "restMinutes": 0,
+      "rule": "Annex I, Chapter V, 1.4(d)",
+      "result": "compliant"
+    }
+  ],
+  "extensionApplied": false,
+  "engine": {
+    "name": "traced-determination-engine",
+    "version": "0.1.0",
+    "ruleSetVersion": "0.1.0"
+  }
+}

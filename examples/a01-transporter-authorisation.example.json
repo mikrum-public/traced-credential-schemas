@@ -1,0 +1,26 @@
+{
+  "authorisationNumber": "HU-T2-EXAMPLE-0001",
+  "authorisationType": "type2",
+  "transporter": {
+    "name": "Example Livestock Transport Ltd",
+    "euid": "HUEXAMPLE.0000000000",
+    "countryCode": "HU"
+  },
+  "scopeLimitations": {
+    "species": [
+      "bovine",
+      "ovine",
+      "porcine"
+    ],
+    "meansOfTransport": [
+      "road"
+    ]
+  },
+  "navigationSystemDemonstrated": true,
+  "issuingAuthority": {
+    "name": "Example Competent Authority",
+    "countryCode": "HU"
+  },
+  "dateOfIssue": "2026-01-15",
+  "validUntil": "2031-01-14"
+}

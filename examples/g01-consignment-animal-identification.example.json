@@ -1,0 +1,22 @@
+{
+  "consignmentId": "CONS-EXAMPLE-0001",
+  "journeyId": "JL-EXAMPLE-0001",
+  "species": "bovine",
+  "identificationRegime": "individual",
+  "headcount": 3,
+  "individualIdentifiers": [
+    "HU0000000001",
+    "HU0000000002",
+    "HU0000000003"
+  ],
+  "originEstablishment": {
+    "name": "Example Holding",
+    "establishmentId": "HU-EST-EXAMPLE-01",
+    "countryCode": "HU"
+  },
+  "sourceDatabase": {
+    "name": "National identification and registration database (example)",
+    "countryCode": "HU"
+  },
+  "extractedAt": "2026-10-05T05:30:00Z"
+}

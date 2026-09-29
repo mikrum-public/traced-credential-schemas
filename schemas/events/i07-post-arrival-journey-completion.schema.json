@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:i07-post-arrival-journey-completion:0.1.0",
+  "title": "I07 Post-Arrival Journey Completion Report (bound event)",
+  "description": "Closes the journey trail: the transporter's completion declaration (journey log Section 4) and the record-keeping facts that replace the paper return of the journey log.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "I07",
+    "kind": "bound-event",
+    "parent": "I01",
+    "category": "I — Journey & welfare",
+    "consolidates": [],
+    "issuer": "Transporter (Annex II, point 6).",
+    "holder": "Transporter; made available to the authority that granted the authorisation and the authority of departure.",
+    "verifiers": [
+      "Competent authority of the place of departure (Annex II, point 8)",
+      "Competent authority that granted the transporter authorisation"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Annex II, points 6 and 8; Section 4",
+      "Reg (EC) No 1/2005 Art. 6(9)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: journey records retained in TRACES.",
+    "validity": "Permanent record.",
+    "revocation": "Not revoked.",
+    "integrity": "Signed event; closes the hash-linked trail.",
+    "format": "SD-JWT VC (event type)",
+    "vct": "urn:traced:event:i07-post-arrival-journey-completion:0.1",
+    "useCases": [
+      "UC-4 destination & anomaly"
+    ],
+    "openQuestions": []
+  },
+  "type": "object",
+  "properties": {
+    "journeyId": {
+      "type": "string",
+      "description": "I01 anchor.",
+      "x-disclosable": false
+    },
+    "previousEventDigest": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest",
+      "description": "Digest of the last event in the trail.",
+      "x-disclosable": false
+    },
+    "arrivalAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Arrival at the place of destination.",
+      "x-disclosable": false
+    },
+    "actualDurationHours": {
+      "type": "number",
+      "description": "Actual journey duration.",
+      "x-disclosable": false,
+      "exclusiveMinimum": 0
+    },
+    "restPeriods": {
+      "type": "integer",
+      "description": "Number of rest periods taken.",
+      "x-disclosable": true,
+      "minimum": 0
+    },
+    "deviationsFromPlan": {
+      "type": "array",
+      "description": "Deviations from the approved plan, with reasons.",
+      "x-disclosable": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "anomalyReportReferences": {
+      "type": "array",
+      "description": "References to anomaly reports (Annex II, Section 5).",
+      "x-disclosable": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "navigationRecordsRetained": {
+      "type": "boolean",
+      "description": "Navigation-system records retained (≥ 3 years, Art. 6(9)).",
+      "x-disclosable": false
+    },
+    "declarationCompletedAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time the transporter completed and signed the declaration (Annex II, point 6).",
+      "x-disclosable": false
+    },
+    "signer": {
+      "type": "object",
+      "description": "Transporter signing the declaration.",
+      "x-disclosable": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "const": "transporter"
+        },
+        "reference": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "reference"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "journeyId",
+    "previousEventDigest",
+    "arrivalAt",
+    "actualDurationHours",
+    "navigationRecordsRetained",
+    "declarationCompletedAt",
+    "signer"
+  ],
+  "additionalProperties": false
+}

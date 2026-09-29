@@ -1,0 +1,21 @@
+{
+  "registrationNumber": "HU-EST-EXAMPLE-01",
+  "establishmentType": "holding",
+  "operator": {
+    "name": "Example Holding Ltd"
+  },
+  "location": {
+    "name": "Example Holding",
+    "establishmentId": "HU-EST-EXAMPLE-01",
+    "countryCode": "HU"
+  },
+  "speciesKept": [
+    "bovine"
+  ],
+  "movementRestriction": false,
+  "competentAuthority": {
+    "name": "Example Competent Authority",
+    "countryCode": "HU"
+  },
+  "statusAsOf": "2026-10-04T08:00:00Z"
+}

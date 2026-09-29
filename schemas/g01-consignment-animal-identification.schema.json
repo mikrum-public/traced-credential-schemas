@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:g01-consignment-animal-identification:0.1.0",
+  "title": "G01 Consignment Animal Identification",
+  "description": "Official identification linkage, issued once per consignment. Content follows the identification regime of the species: official identifiers (or a commitment to them) for individually identified species; holding mark, batch reference, headcount and weight for batch-identified species.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "G01",
+    "kind": "credential",
+    "category": "G — Animal identity & origin",
+    "consolidates": [
+      "G01 Consignment Animal Identification"
+    ],
+    "issuer": "Competent authority, as operator of the national identification and registration database (authentic source) — e.g. the Italian national database (BDN) run by IZS Teramo for the Ministry of Health.",
+    "holder": "Transporter for the journey (legal-entity wallet); presentable by the keeper at departure and destination.",
+    "verifiers": [
+      "Competent authority of the place of departure",
+      "Official veterinarians at control posts",
+      "Keeper and competent authority at destination"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 4(1)(a)",
+      "Reg (EU) 2016/429 (Animal Health Law) Art. 109, 112–115",
+      "Delegated Reg (EU) 2019/2035 (identification and traceability of kept terrestrial animals)"
+    ],
+    "forwardCompatibility": "Unchanged by COM(2023) 770; identification rules sit in the Animal Health Law.",
+    "validity": "Single journey.",
+    "revocation": "Superseded if the consignment changes before departure.",
+    "integrity": "Issuer electronic seal; source records remain in the national database.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:g01-consignment-animal-identification:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points",
+      "UC-4 destination & anomaly"
+    ],
+    "openQuestions": [
+      "Commitment scheme for individual identifiers (salted Merkle tree vs. per-identifier SD-JWT disclosures)."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "consignmentId": {
+      "type": "string",
+      "description": "Consignment identifier, bound to the I01 journey anchor.",
+      "x-disclosable": false
+    },
+    "journeyId": {
+      "type": "string",
+      "description": "I01 journey identifier.",
+      "x-disclosable": false
+    },
+    "species": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/species",
+      "description": "Species carried.",
+      "x-disclosable": false
+    },
+    "identificationRegime": {
+      "type": "string",
+      "description": "individual or batch identification, per species rules.",
+      "x-disclosable": false,
+      "enum": [
+        "individual",
+        "batch"
+      ]
+    },
+    "headcount": {
+      "type": "integer",
+      "description": "Number of animals in the consignment.",
+      "x-disclosable": false,
+      "minimum": 1
+    },
+    "individualIdentifiers": {
+      "type": "array",
+      "description": "Official identifiers of each animal (individual regime).",
+      "x-disclosable": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "identifiersCommitment": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest",
+      "description": "Cryptographic commitment (e.g. Merkle root) to the individual identifiers, with disclosure on demand — alternative to listing them.",
+      "x-disclosable": false
+    },
+    "batch": {
+      "type": "object",
+      "description": "Batch identification (batch regime).",
+      "x-disclosable": true,
+      "properties": {
+        "holdingMark": {
+          "type": "string"
+        },
+        "batchReference": {
+          "type": "string"
+        },
+        "totalWeightKg": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "holdingMark"
+      ],
+      "additionalProperties": false
+    },
+    "originEstablishment": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Establishment of origin (registration number required).",
+      "x-disclosable": false
+    },
+    "sourceDatabase": {
+      "type": "object",
+      "description": "Authentic source: the national identification and registration database.",
+      "x-disclosable": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "countryCode": {
+          "$ref": "urn:traced:schema:common:0.1.0#/$defs/countryCode"
+        }
+      },
+      "required": [
+        "name",
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "extractedAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time the consignment data was drawn from the source database.",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "consignmentId",
+    "journeyId",
+    "species",
+    "identificationRegime",
+    "headcount",
+    "originEstablishment",
+    "sourceDatabase",
+    "extractedAt"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "identificationRegime": {
+            "const": "individual"
+          }
+        },
+        "required": [
+          "identificationRegime"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "required": [
+              "individualIdentifiers"
+            ]
+          },
+          {
+            "required": [
+              "identifiersCommitment"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "identificationRegime": {
+            "const": "batch"
+          }
+        },
+        "required": [
+          "identificationRegime"
+        ]
+      },
+      "then": {
+        "required": [
+          "batch"
+        ]
+      }
+    }
+  ]
+}

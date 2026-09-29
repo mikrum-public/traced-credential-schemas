@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:h02-fitness-to-travel-assessment:0.1.0",
+  "title": "H02 Fitness-to-Travel Assessment",
+  "description": "Assessment that the animals are fit for the intended journey (Art. 3(b), Annex I Chapter I), performed before loading; short-lived.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "H02",
+    "kind": "credential",
+    "category": "H — Veterinary & health",
+    "consolidates": [
+      "H02 Fitness-to-Travel Assessment"
+    ],
+    "issuer": "Official veterinarian at the place of departure for long journeys between Member States (Art. 15(2)); otherwise the keeper at the place of departure (Art. 8(1)).",
+    "holder": "Transporter (legal-entity wallet), for the journey.",
+    "verifiers": [
+      "Official veterinarians at control posts and exit points (Art. 21(1)(c))",
+      "Competent authority en route (Art. 15(1))",
+      "Keeper and competent authority at destination"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 3(b), 8(1), 15(2)",
+      "Reg (EC) No 1/2005 Annex I, Chapter I"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: Art. 17 (obligations for keepers prior to the journey, incl. fitness for transport).",
+    "validity": "Until departure plus tolerance.",
+    "revocation": "Not revoked; expires.",
+    "integrity": "Issuer electronic seal; Tier 1 sealed photo evidence may be attached by reference.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:h02-fitness-to-travel-assessment:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Tolerance window and whether a keeper-issued variant is needed for short journeys in the pilot."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "consignmentId": {
+      "type": "string",
+      "description": "Consignment identifier (G01).",
+      "x-disclosable": false
+    },
+    "journeyId": {
+      "type": "string",
+      "description": "I01 journey identifier.",
+      "x-disclosable": false
+    },
+    "assessedAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time of the assessment (before loading).",
+      "x-disclosable": false
+    },
+    "placeOfAssessment": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Place of departure.",
+      "x-disclosable": false
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Overall outcome for the consignment as loaded.",
+      "x-disclosable": false,
+      "enum": [
+        "fit",
+        "fit-with-conditions"
+      ]
+    },
+    "animalsAssessed": {
+      "type": "integer",
+      "description": "Number of animals assessed.",
+      "x-disclosable": false,
+      "minimum": 1
+    },
+    "animalsExcluded": {
+      "type": "integer",
+      "description": "Animals found unfit and not loaded.",
+      "x-disclosable": true,
+      "minimum": 0
+    },
+    "conditions": {
+      "type": "array",
+      "description": "Conditions under Annex I, Chapter I, point 3 (e.g. slightly injured, transport under veterinary supervision).",
+      "x-disclosable": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "assessor": {
+      "type": "object",
+      "description": "Assessor; for long journeys between Member States the check is part of the official animal health checks (Art. 15(2)).",
+      "x-disclosable": true,
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "official-veterinarian",
+            "keeper"
+          ]
+        },
+        "professionalId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "validUntil": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Planned departure plus a tolerance fixed in T4.1.",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "consignmentId",
+    "journeyId",
+    "assessedAt",
+    "placeOfAssessment",
+    "outcome",
+    "animalsAssessed",
+    "assessor",
+    "validUntil"
+  ],
+  "additionalProperties": false
+}

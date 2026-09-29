@@ -1,0 +1,58 @@
+{
+  "journeyId": "JL-EXAMPLE-0001",
+  "journeyType": "long-journey",
+  "organiser": {
+    "name": "Example Livestock Transport Ltd",
+    "countryCode": "HU"
+  },
+  "transporters": [
+    {
+      "authorisationNumber": "HU-T2-EXAMPLE-0001"
+    }
+  ],
+  "animals": {
+    "species": "bovine",
+    "headcount": 3
+  },
+  "placeOfDeparture": {
+    "name": "Example Holding",
+    "establishmentId": "HU-EST-EXAMPLE-01",
+    "countryCode": "HU"
+  },
+  "plannedDeparture": "2026-10-05T06:30:00Z",
+  "placeOfDestination": {
+    "name": "Example Destination Holding",
+    "establishmentId": "IT-EST-EXAMPLE-09",
+    "countryCode": "IT"
+  },
+  "expectedDurationHours": 19,
+  "plannedRestAndTransferPoints": [
+    {
+      "place": {
+        "name": "Example Control Post",
+        "countryCode": "SI"
+      },
+      "plannedArrival": "2026-10-05T19:30:00Z",
+      "plannedDurationHours": 1
+    }
+  ],
+  "vehicleApprovalNumbers": [
+    "HU-VA-EXAMPLE-0007"
+  ],
+  "driverCertificateNumbers": [
+    "HU-COC-EXAMPLE-0042"
+  ],
+  "approval": {
+    "approvingAuthority": {
+      "name": "Example Competent Authority",
+      "countryCode": "HU"
+    },
+    "approvedAt": "2026-10-03T10:00:00Z",
+    "method": "traces-nt-approval"
+  },
+  "pinnedVersions": {
+    "semanticModel": "0.1.0",
+    "credentialSchemaSet": "0.1.0",
+    "ruleSet": "0.1.0"
+  }
+}

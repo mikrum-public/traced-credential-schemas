@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:k05-traces-nt-journey-registration-record:0.1.0",
+  "title": "K05 TRACES NT Journey Registration Record",
+  "description": "Wallet-verifiable reference to the journey's registration in TRACES NT and the notifications sent to the authorities concerned, with the border-crossing events of the journey. TRACED reads TRACES NT; it does not modify it.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "K05",
+    "kind": "credential",
+    "category": "K — Border & customs",
+    "consolidates": [
+      "K05 TRACES NT Journey Registration Record"
+    ],
+    "issuer": "Competent authority of the place of departure, from its TRACES NT record, through the authority verify-and-issue channel (T4.4).",
+    "holder": "Transporter (legal-entity wallet).",
+    "verifiers": [
+      "Competent authorities en route and at destination",
+      "Official veterinarians at control posts"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 14(1)(d)",
+      "Reg (EU) 2016/429 (Animal Health Law) Art. 152",
+      "Reg (EU) 2019/1715 (IMSOC / TRACES)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: Art. 15 (journey log in TRACES). TRACES modernisation is not coupled to the wallet timeline.",
+    "validity": "Until journey completion.",
+    "revocation": "Cancellation in TRACES NT → status list.",
+    "integrity": "Issuer electronic seal; mirrors TRACES NT references only.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:k05-traces-nt-journey-registration-record:0.1",
+    "useCases": [
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Availability of a TRACES NT test or acceptance environment for the pilot."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "journeyId": {
+      "type": "string",
+      "description": "I01 anchor.",
+      "x-disclosable": false
+    },
+    "tracesReferences": {
+      "type": "object",
+      "description": "TRACES NT references.",
+      "x-disclosable": false,
+      "properties": {
+        "journeyLogReference": {
+          "type": "string"
+        },
+        "healthCertificateReferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "journeyLogReference"
+      ],
+      "additionalProperties": false
+    },
+    "notifiedAuthorities": {
+      "type": "array",
+      "description": "Authorities notified via TRACES (Art. 14(1)(d); AHL Art. 152).",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "authority": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "destination",
+              "control-post",
+              "transit"
+            ]
+          }
+        },
+        "required": [
+          "authority",
+          "role"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "borderCrossings": {
+      "type": "array",
+      "description": "Planned and actual internal-border crossings.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "fromCountry": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/countryCode"
+          },
+          "toCountry": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/countryCode"
+          },
+          "planned": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime"
+          },
+          "actual": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime"
+          }
+        },
+        "required": [
+          "fromCountry",
+          "toCountry"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "registeredAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time of registration in TRACES NT.",
+      "x-disclosable": false
+    },
+    "recordedBy": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority",
+      "description": "Authority whose TRACES NT record this reflects.",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "journeyId",
+    "tracesReferences",
+    "registeredAt",
+    "recordedBy"
+  ],
+  "additionalProperties": false
+}

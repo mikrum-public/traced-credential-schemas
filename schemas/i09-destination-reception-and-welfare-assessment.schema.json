@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:i09-destination-reception-and-welfare-assessment:0.1.0",
+  "title": "I09 Destination Farm Reception & Welfare Assessment",
+  "description": "Arrival event and condition on arrival, each animal categorised fit, unfit or dead in line with Reg (EC) No 1/2005; injuries are assessed within \"unfit\". Carries the UC-4 anomaly reporting — there is no separate mortality or injury credential.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "I09",
+    "kind": "credential",
+    "category": "I — Journey & welfare",
+    "consolidates": [
+      "I09 Destination Farm Reception & Welfare Assessment"
+    ],
+    "issuer": "Keeper at the place of destination (Art. 8(2); Annex II, point 4 and Section 3). At a slaughterhouse, the official veterinarian's controls remain a separate official control and are referenced, not replaced.",
+    "holder": "Keeper at destination; shared with the transporter and the authorities.",
+    "verifiers": [
+      "Competent authority of the place of destination",
+      "Competent authority of the place of departure (notification of breaches, Art. 26(3))",
+      "Transporter"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 8(2), 15(3), 26(3)",
+      "Reg (EC) No 1/2005 Annex II, point 4, Sections 3 and 5",
+      "Reg (EC) No 1/2005 Annex I, Chapter I"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: destination checks and recording in TRACES; mapping in T2.1.",
+    "validity": "Permanent record.",
+    "revocation": "Not revoked; corrections are new versions.",
+    "integrity": "Issuer signature; Tier-1 sealed evidence by digest.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:i09-destination-reception-and-welfare-assessment:0.1",
+    "useCases": [
+      "UC-4 destination & anomaly"
+    ],
+    "openQuestions": [
+      "Signature means for keepers without a legal-entity wallet (farms run by natural persons)."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "journeyId": {
+      "type": "string",
+      "description": "I01 anchor.",
+      "x-disclosable": false
+    },
+    "placeOfDestination": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/place",
+      "description": "Place of destination (establishment id required).",
+      "x-disclosable": false
+    },
+    "destinationType": {
+      "type": "string",
+      "description": "Type of destination.",
+      "x-disclosable": false,
+      "enum": [
+        "holding",
+        "slaughterhouse",
+        "assembly-centre",
+        "other"
+      ]
+    },
+    "arrivalAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Arrival time.",
+      "x-disclosable": false
+    },
+    "unloadingCompletedAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "End of unloading.",
+      "x-disclosable": false
+    },
+    "animalsReceived": {
+      "type": "integer",
+      "description": "Animals received.",
+      "x-disclosable": false,
+      "minimum": 0
+    },
+    "conditionOnArrival": {
+      "type": "object",
+      "description": "Counts by category.",
+      "x-disclosable": false,
+      "properties": {
+        "fit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unfit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dead": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "fit",
+        "unfit",
+        "dead"
+      ],
+      "additionalProperties": false
+    },
+    "animals": {
+      "type": "array",
+      "description": "Per-animal findings where the law requires individual traceability; otherwise omitted.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "fit",
+              "unfit",
+              "dead"
+            ]
+          },
+          "injuryNoted": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "anomalyReportReference": {
+      "type": "string",
+      "description": "Anomaly report (Annex II, Section 5), if any.",
+      "x-disclosable": true
+    },
+    "evidenceDigests": {
+      "type": "array",
+      "description": "Tier-1 sealed photo/video evidence, by digest.",
+      "x-disclosable": true,
+      "items": {
+        "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest"
+      }
+    },
+    "receivedBy": {
+      "type": "object",
+      "description": "Keeper at the place of destination.",
+      "x-disclosable": false,
+      "properties": {
+        "establishmentOperator": {
+          "type": "string"
+        },
+        "signatoryRole": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "establishmentOperator"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "journeyId",
+    "placeOfDestination",
+    "destinationType",
+    "arrivalAt",
+    "animalsReceived",
+    "conditionOnArrival",
+    "receivedBy"
+  ],
+  "additionalProperties": false
+}

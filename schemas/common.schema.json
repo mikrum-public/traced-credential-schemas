@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:common:0.1.0",
+  "title": "TRACED common definitions",
+  "description": "Shared building blocks used by the TRACED pilot credential schemas. Pre-project draft; subject to change in T4.1.",
+  "$defs": {
+    "countryCode": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO 3166-1 alpha-2 country code (Greece: GR)."
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "species": {
+      "type": "string",
+      "enum": [
+        "bovine",
+        "ovine",
+        "caprine",
+        "porcine",
+        "equine",
+        "poultry",
+        "other"
+      ],
+      "description": "Species group as used in Reg (EC) No 1/2005. Mapped to the TRACED semantic model (T2.3)."
+    },
+    "postalAddress": {
+      "type": "object",
+      "properties": {
+        "streetAddress": {
+          "type": "string"
+        },
+        "locality": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "countryCode": {
+          "$ref": "#/$defs/countryCode"
+        }
+      },
+      "required": [
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "geoPoint": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "additionalProperties": false
+    },
+    "legalEntity": {
+      "type": "object",
+      "description": "A legal person. euid follows the European Unique Identifier used by the business registers (BRIS) and by the Legal Person Identification Data (LPID) attestation; in the EU Business Wallet the operator identity itself is expected to come from LPID, and TRACED credentials reference it rather than redefine it.",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "euid": {
+          "type": "string"
+        },
+        "nationalRegistrationNumber": {
+          "type": "string"
+        },
+        "countryCode": {
+          "$ref": "#/$defs/countryCode"
+        },
+        "address": {
+          "$ref": "#/$defs/postalAddress"
+        }
+      },
+      "required": [
+        "name",
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "competentAuthority": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "countryCode": {
+          "$ref": "#/$defs/countryCode"
+        },
+        "tracesAuthorityCode": {
+          "type": "string",
+          "description": "Authority code as registered in TRACES NT, where available."
+        }
+      },
+      "required": [
+        "name",
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "naturalPerson": {
+      "type": "object",
+      "description": "Personal data: disclose only when the check requires it (data minimisation, GDPR).",
+      "properties": {
+        "familyName": {
+          "type": "string"
+        },
+        "givenName": {
+          "type": "string"
+        },
+        "birthDate": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "required": [
+        "familyName",
+        "givenName"
+      ],
+      "additionalProperties": false
+    },
+    "place": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "establishmentId": {
+          "type": "string",
+          "description": "Registration or approval number of the establishment, where applicable."
+        },
+        "address": {
+          "$ref": "#/$defs/postalAddress"
+        },
+        "countryCode": {
+          "$ref": "#/$defs/countryCode"
+        },
+        "geo": {
+          "$ref": "#/$defs/geoPoint"
+        }
+      },
+      "required": [
+        "countryCode"
+      ],
+      "additionalProperties": false
+    },
+    "digest": {
+      "type": "object",
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": [
+            "sha-256",
+            "sha-384",
+            "sha-512"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "description": "base64url, no padding"
+        }
+      },
+      "required": [
+        "alg",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "versionSet": {
+      "type": "object",
+      "description": "Versions pinned at journey start; they govern the journey to completion.",
+      "properties": {
+        "semanticModel": {
+          "type": "string"
+        },
+        "credentialSchemaSet": {
+          "type": "string"
+        },
+        "ruleSet": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "semanticModel",
+        "credentialSchemaSet",
+        "ruleSet"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

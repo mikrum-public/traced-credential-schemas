@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:a01-transporter-authorisation:0.1.0",
+  "title": "A01 Transporter Authorisation (intra-EU)",
+  "description": "Authorisation of the transporter by the competent authority of the Member State where it is established (Type 1: Art. 10; Type 2, long journeys: Art. 11).",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "A01",
+    "kind": "credential",
+    "category": "A — Transport operator",
+    "consolidates": [
+      "A01 Transporter Authorisation (Intra-EU)"
+    ],
+    "issuer": "Competent authority of the Member State where the transporter is established (Art. 10(1)(a), Art. 12).",
+    "holder": "Transporter — the legal person's (EU Business) wallet.",
+    "verifiers": [
+      "Competent authority of the place of departure (Art. 14(1)(a)(i))",
+      "Official veterinarians at control posts and exit points (Art. 21(1)(a))",
+      "Competent authority of the place of destination",
+      "Organisers contracting transport (Art. 5(1))"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 6(1)–(2), 10, 11, 12, 13",
+      "Reg (EC) No 1/2005 Annex III, Chapters I and II (specimen authorisations)"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: transporter authorisation provisions; mapping in T2.1.",
+    "validity": "≤ 5 years; changes to be notified within 15 working days (Art. 6(2)).",
+    "revocation": "Suspension or withdrawal (Art. 26(4)(c)) → status list update.",
+    "integrity": "Issuer electronic seal (qualified where available).",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:a01-transporter-authorisation:0.1",
+    "useCases": [
+      "UC-1 pre-departure",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Reuse LPID/EUCC for the transporter identity once available in the EU Business Wallet; keep only the authorisation-specific claims here."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "authorisationNumber": {
+      "type": "string",
+      "description": "Number unique in the issuing Member State (Art. 13(2)).",
+      "x-disclosable": false
+    },
+    "authorisationType": {
+      "type": "string",
+      "description": "type1 = Art. 10(1), not valid for long journeys; type2 = Art. 11(1), valid for all journeys incl. long journeys.",
+      "x-disclosable": false,
+      "enum": [
+        "type1",
+        "type2"
+      ]
+    },
+    "transporter": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/legalEntity",
+      "description": "The authorised transporter (legal person). Name and number of Type 2 authorisations are public (Art. 13(4)).",
+      "x-disclosable": false
+    },
+    "scopeLimitations": {
+      "type": "object",
+      "description": "Limitations set by the authority (Art. 13(1)), e.g. species or means of transport.",
+      "x-disclosable": true,
+      "properties": {
+        "species": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/species"
+          }
+        },
+        "meansOfTransport": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "road",
+              "rail",
+              "sea",
+              "air"
+            ]
+          }
+        },
+        "other": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "navigationSystemDemonstrated": {
+      "type": "boolean",
+      "description": "Type 2 only: use of the navigation system demonstrated (Art. 11(2)).",
+      "x-disclosable": true
+    },
+    "issuingAuthority": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/competentAuthority",
+      "description": "Competent authority that granted the authorisation (one authority per transporter, Art. 12).",
+      "x-disclosable": false
+    },
+    "dateOfIssue": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "Date of issue.",
+      "x-disclosable": false
+    },
+    "validUntil": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/date",
+      "description": "End of validity; not more than five years from issue (Art. 10(2), 11(3)).",
+      "x-disclosable": false
+    }
+  },
+  "required": [
+    "authorisationNumber",
+    "authorisationType",
+    "transporter",
+    "issuingAuthority",
+    "dateOfIssue",
+    "validUntil"
+  ],
+  "additionalProperties": false
+}

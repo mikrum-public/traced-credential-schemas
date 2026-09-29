@@ -1,0 +1,19 @@
+{
+  "officialVeterinarian": {
+    "familyName": "Example",
+    "givenName": "Veterinarian"
+  },
+  "professionalId": "OV-EXAMPLE-117",
+  "appointingAuthority": {
+    "name": "Example Competent Authority",
+    "countryCode": "HU"
+  },
+  "mandateScope": [
+    "animal-health-certification",
+    "fitness-for-transport-check",
+    "journey-log-check"
+  ],
+  "territorialScope": "HU (example county)",
+  "validFrom": "2025-01-01",
+  "validUntil": "2027-12-31"
+}

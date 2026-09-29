@@ -1,0 +1,18 @@
+{
+  "consignmentId": "CONS-EXAMPLE-0001",
+  "journeyId": "JL-EXAMPLE-0001",
+  "assessedAt": "2026-10-05T05:45:00Z",
+  "placeOfAssessment": {
+    "name": "Example Holding",
+    "establishmentId": "HU-EST-EXAMPLE-01",
+    "countryCode": "HU"
+  },
+  "outcome": "fit",
+  "animalsAssessed": 3,
+  "animalsExcluded": 0,
+  "assessor": {
+    "role": "official-veterinarian",
+    "professionalId": "OV-EXAMPLE-117"
+  },
+  "validUntil": "2026-10-05T09:00:00Z"
+}

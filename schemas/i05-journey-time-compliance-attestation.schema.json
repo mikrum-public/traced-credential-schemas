@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:traced:schema:i05-journey-time-compliance-attestation:0.1.0",
+  "title": "I05 Journey Time Compliance Attestation",
+  "description": "Result of the deterministic rules-as-code check of journey times and rest periods (Annex I, Chapter V) over the event trail. It is evidence for the verifier, not an authority decision, and it is not machine learning. Driving hours of the driver are a separate rule and not part of this credential.",
+  "x-traced": {
+    "status": "pre-project draft — subject to change in T4.1",
+    "version": "0.1.0",
+    "id": "I05",
+    "kind": "credential",
+    "category": "I — Journey & welfare",
+    "consolidates": [
+      "I05 Journey Time Compliance Attestation"
+    ],
+    "issuer": "TRACED rules-as-code determination engine (machine issuer, electronic seal of the service operator); runs at the edge and on the platform.",
+    "holder": "Transporter (legal-entity wallet).",
+    "verifiers": [
+      "Competent authority en route — checks of travel times and rest periods (Art. 15(1))",
+      "Competent authority of destination and of departure (ex post)"
+    ],
+    "legalBasis": [
+      "Reg (EC) No 1/2005 Art. 15(1), 15(4)",
+      "Reg (EC) No 1/2005 Annex I, Chapter V, point 1"
+    ],
+    "forwardCompatibility": "COM(2023) 770 (proposal) — forward-compatibility only: revised journey-time limits would be a new rule-set version, not a new schema.",
+    "validity": "Point in time; re-issued as the trail grows.",
+    "revocation": "Superseded by a later attestation for the same journey.",
+    "integrity": "Service electronic seal; references the evaluated evidence by digest.",
+    "format": "SD-JWT VC",
+    "vct": "urn:traced:credential:i05-journey-time-compliance-attestation:0.1",
+    "useCases": [
+      "UC-2 in-transit welfare",
+      "UC-3 official verification at control points"
+    ],
+    "openQuestions": [
+      "Legal standing of a machine-issued attestation: to be settled in T2.4 / T3.3 (evidence only; the authority decides)."
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "journeyId": {
+      "type": "string",
+      "description": "I01 anchor.",
+      "x-disclosable": false
+    },
+    "evaluatedAt": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime",
+      "description": "Time of evaluation.",
+      "x-disclosable": false
+    },
+    "coversEventsUpTo": {
+      "type": "integer",
+      "description": "Last I02 sequence number included.",
+      "x-disclosable": false,
+      "minimum": 0
+    },
+    "result": {
+      "type": "string",
+      "description": "Overall result.",
+      "x-disclosable": false,
+      "enum": [
+        "compliant",
+        "non-compliant",
+        "indeterminate"
+      ]
+    },
+    "rulesApplied": {
+      "type": "array",
+      "description": "Legal provisions evaluated, e.g. \"Annex I, Chapter V, 1.4(d)\".",
+      "x-disclosable": false,
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "segments": {
+      "type": "array",
+      "description": "Per-segment result.",
+      "x-disclosable": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime"
+          },
+          "to": {
+            "$ref": "urn:traced:schema:common:0.1.0#/$defs/dateTime"
+          },
+          "travelMinutes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "restMinutes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rule": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string",
+            "enum": [
+              "compliant",
+              "non-compliant",
+              "indeterminate"
+            ]
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "rule",
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "extensionApplied": {
+      "type": "boolean",
+      "description": "Two-hour extension used (Annex I, Chapter V, point 1.8).",
+      "x-disclosable": true
+    },
+    "evidenceDigest": {
+      "$ref": "urn:traced:schema:common:0.1.0#/$defs/digest",
+      "description": "Digest of the event trail and Tier-2 data evaluated.",
+      "x-disclosable": true
+    },
+    "engine": {
+      "type": "object",
+      "description": "Determination engine and rule set.",
+      "x-disclosable": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "ruleSetVersion": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "ruleSetVersion"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "journeyId",
+    "evaluatedAt",
+    "coversEventsUpTo",
+    "result",
+    "rulesApplied",
+    "engine"
+  ],
+  "additionalProperties": false
+}
